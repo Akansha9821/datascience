@@ -107,3 +107,38 @@ print("Intercept:", lr.intercept_)
 print("Coefficients:", lr.coef_)
 
 print("Features:", X.columns.tolist())
+
+
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, roc_auc_score
+
+# Get predicted probabilities for class 1
+y_prob = model.predict_proba(X_test)[:, 1]
+
+# Calculate ROC curve points
+fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+
+# Calculate AUC
+auc_score = roc_auc_score(y_test, y_prob)
+
+# Plot ROC curve
+plt.figure(figsize=(8, 6))
+plt.plot(
+    fpr, tpr,
+    label=f"Logistic Regression (AUC = {auc_score:.2f})",
+    linewidth=2
+)
+
+# Random classifier baseline
+plt.plot([0, 1], [0, 1], linestyle="--", label="Random Classifier")
+
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate (Recall)")
+plt.title("ROC Curve - Logistic Regression")
+plt.legend(loc="lower right")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+print("ROC-AUC Score:", auc_score)
+
